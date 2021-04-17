@@ -38,19 +38,27 @@ func main() {
 	}
 
 	// Count number of 1's in each col
-	var lastWasTrue = true
-	var colCountRow = 0
+	var check int
+	var lastWasTrue bool
+	var colCountRow int
 	for col := range board {
+		check = 0
+		lastWasTrue = true
+		colCountRow = 0
 		for row := range board[col] {
-			if lastWasTrue && board[col][row] == 1 {
-				colcount[col][colCountRow] += board[col][row]
-			} else if !lastWasTrue && board[col][row] == 1 {
-				lastWasTrue = true
-				colCountRow = 1
-				colcount[col][colCountRow] += board[col][row]
-			} else if lastWasTrue && board[col][row] == 0 {
-				lastWasTrue = false
-				//colCountRow = 1	// need to fix this
+			if board[col][row] == 1 || check > 0 {
+
+				if lastWasTrue && board[col][row] == 1 {
+					colcount[col][colCountRow] += board[col][row]
+					check++
+				} else if !lastWasTrue && board[col][row] == 1 {
+					lastWasTrue = true
+					colCountRow++
+					colcount[col][colCountRow] += board[col][row]
+				} else if lastWasTrue && board[col][row] == 0 {
+					lastWasTrue = false
+				}
+
 			}
 
 		}
@@ -75,6 +83,11 @@ func main() {
 	output += "\n        "
 	for col := 0; col < dimension; col++ {
 		output += fmt.Sprintf("  %d  ", colcount[col][1])
+	}
+
+	output += "\n        "
+	for col := 0; col < dimension; col++ {
+		output += fmt.Sprintf("  %d  ", colcount[col][2])
 	}
 	output += "\n\n"
 
