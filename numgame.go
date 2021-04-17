@@ -75,19 +75,11 @@ func main() {
 	var output string
 
 	// Output the col counts
-	output += "\n        "
-	for col := 0; col < dimension; col++ {
-		output += fmt.Sprintf("  %d  ", colcount[col][0])
-	}
-
-	output += "\n        "
-	for col := 0; col < dimension; col++ {
-		output += fmt.Sprintf("  %d  ", colcount[col][1])
-	}
-
-	output += "\n        "
-	for col := 0; col < dimension; col++ {
-		output += fmt.Sprintf("  %d  ", colcount[col][2])
+	for row := 0; row < summary_dimemsion; row++ {
+		output += "\n        "
+		for col := 0; col < dimension; col++ {
+			output += fmt.Sprintf("  %d  ", colcount[col][0])
+		}
 	}
 	output += "\n\n"
 
