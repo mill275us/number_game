@@ -24,15 +24,12 @@ func main() {
 	// Populate the board with random 1's
 	FillBoard(game)
 
-	/*
-		// Calculate the 1's in rows and colums
-		UpdateBoard(dimension, board, colcount, rowcount)
+	// Calculate the 1's in rows and colums
+	UpdateBoard(game)
 
-		// Output the board
-		DisplayBoard(dimension, summary_dimemsion, board, colcount, rowcount)
-	*/
+	// Output the board
+	DisplayBoard(game)
 
-	fmt.Println(game)
 }
 
 // InitGame takes an integer argument for the size of the playing field
@@ -73,31 +70,29 @@ func FillBoard(gameStruct *game) {
 	}
 }
 
-func UpdateBoard(dimension int, board [][]int, colcount [][]int, rowcount [][]int) {
+func UpdateBoard(gameStruct *game) {
 	// Count number of 1's in each col
 	var check int
 	var lastWasTrue bool
 	var colCountRow int
-	for col := range board {
+	for col := range gameStruct.board {
 		check = 0
 		lastWasTrue = true
 		colCountRow = 0
-		for row := range board[col] {
-			if board[col][row] == 1 || check > 0 {
+		for row := range gameStruct.board[col] {
+			if gameStruct.board[col][row] == 1 || check > 0 {
 
-				if lastWasTrue && board[col][row] == 1 {
-					colcount[col][colCountRow] += board[col][row]
+				if lastWasTrue && gameStruct.board[col][row] == 1 {
+					gameStruct.colcount[col][colCountRow] += gameStruct.board[col][row]
 					check++
-				} else if !lastWasTrue && board[col][row] == 1 {
+				} else if !lastWasTrue && gameStruct.board[col][row] == 1 {
 					lastWasTrue = true
 					colCountRow++
-					colcount[col][colCountRow] += board[col][row]
-				} else if lastWasTrue && board[col][row] == 0 {
+					gameStruct.colcount[col][colCountRow] += gameStruct.board[col][row]
+				} else if lastWasTrue && gameStruct.board[col][row] == 0 {
 					lastWasTrue = false
 				}
-
 			}
-
 		}
 	}
 
@@ -108,17 +103,17 @@ func UpdateBoard(dimension int, board [][]int, colcount [][]int, rowcount [][]in
 	var rowCountCol int
 
 	// Loop logic
-	for row := 0; row < dimension; row++ {
+	for row := 0; row < gameStruct.dimension; row++ {
 		isFirstCol = true
 		rowCountCol = 0
 
-		for col := range board {
+		for col := range gameStruct.board {
 			// 	if it is first col
 			// 		if 1 then rowcount++ and  first col = false
 			// 		else first col = false
 			if isFirstCol {
-				if board[col][row] == 1 {
-					rowcount[rowCountCol][row]++
+				if gameStruct.board[col][row] == 1 {
+					gameStruct.rowcount[rowCountCol][row]++
 				}
 				isFirstCol = false
 			} else {
@@ -126,59 +121,59 @@ func UpdateBoard(dimension int, board [][]int, colcount [][]int, rowcount [][]in
 				// 		if 1 and last was 1 then rowcount++ and store rowcount in array
 				// 		if 0 and last was 1 then arrayindex++ and rowcount = 0
 				// 		if 01and last was 0 then rowcount++ and store rowcount in array
-				if board[col][row] == 1 && board[col-1][row] == 1 {
-					rowcount[rowCountCol][row]++
+				if gameStruct.board[col][row] == 1 && gameStruct.board[col-1][row] == 1 {
+					gameStruct.rowcount[rowCountCol][row]++
 				}
-				if board[col][row] == 0 && board[col-1][row] == 1 {
+				if gameStruct.board[col][row] == 0 && gameStruct.board[col-1][row] == 1 {
 					rowCountCol++
 				}
-				if board[col][row] == 1 && board[col-1][row] == 0 {
-					rowcount[rowCountCol][row]++
+				if gameStruct.board[col][row] == 1 && gameStruct.board[col-1][row] == 0 {
+					gameStruct.rowcount[rowCountCol][row]++
 				}
 			}
 		}
 	}
 }
 
-func DisplayBoard(dimension int, summary_dimemsion int, board [][]int, colcount [][]int, rowcount [][]int) {
+func DisplayBoard(gameStruct *game) {
 	var output string
 
 	// Output the col counts as header rows
-	for row := 0; row < summary_dimemsion; row++ {
+	for row := 0; row < gameStruct.summary_dimemsion; row++ {
 
 		// Indeed based on summary_dimemsion and the widthe
 		// of each of the columns
 		output += "\n "
-		for i := 0; i < summary_dimemsion; i++ {
+		for i := 0; i < gameStruct.summary_dimemsion; i++ {
 			output += "    "
 		}
 
 		// Output actual colcount values into the head row
-		for col := 0; col < dimension; col++ {
-			output += fmt.Sprintf("  %d  ", colcount[col][row])
+		for col := 0; col < gameStruct.dimension; col++ {
+			output += fmt.Sprintf("  %d  ", gameStruct.colcount[col][row])
 		}
 	}
 	// Add a divider between header rows and start of board
 	output += "\n\n"
-	output += PrintSeparator(dimension, summary_dimemsion)
+	output += PrintSeparator(gameStruct.dimension, gameStruct.summary_dimemsion)
 
 	// Output main playing field and also the row counts at the front
-	for row := 0; row < dimension; row++ {
+	for row := 0; row < gameStruct.dimension; row++ {
 
 		// Output the row counts as the first elements of the row
-		for i := 0; i < summary_dimemsion; i++ {
-			output += fmt.Sprintf(" %d ", rowcount[i][row])
+		for i := 0; i < gameStruct.summary_dimemsion; i++ {
+			output += fmt.Sprintf(" %d ", gameStruct.rowcount[i][row])
 		}
 		output += " - |"
 
 		// Loop through all of the columns for this row
-		for col := 0; col < dimension; col++ {
-			output += fmt.Sprintf("  %d |", board[col][row])
+		for col := 0; col < gameStruct.dimension; col++ {
+			output += fmt.Sprintf("  %d |", gameStruct.board[col][row])
 		}
 
 		// Add a divider between rows
 		output += "\n"
-		output += PrintSeparator(dimension, summary_dimemsion)
+		output += PrintSeparator(gameStruct.dimension, gameStruct.summary_dimemsion)
 
 	}
 	fmt.Println(output)
