@@ -65,9 +65,40 @@ func main() {
 	}
 
 	// Count number of 1's in each row
+	// first col -- boolean whether this is the first col looked at
+	// rowCountCol -- index for the col of the header array for storing rowcount
+	var isFirstCol bool
+	var rowCountCol int
+
+	// Loop logic
 	for row := 0; row < dimension; row++ {
+		isFirstCol = true
+		rowCountCol = 0
+
 		for col := range board {
-			rowcount[0][row] += board[col][row]
+			// 	if it is first col
+			// 		if 1 then rowcount++ and  first col = false
+			// 		else first col = false
+			if isFirstCol {
+				if board[col][row] == 1 {
+					rowcount[rowCountCol][row]++
+				}
+				isFirstCol = false
+			} else {
+				// 	if not first col
+				// 		if 1 and last was 1 then rowcount++ and store rowcount in array
+				// 		if 0 and last was 1 then arrayindex++ and rowcount = 0
+				// 		if 01and last was 0 then rowcount++ and store rowcount in array
+				if board[col][row] == 1 && board[col-1][row] == 1 {
+					rowcount[rowCountCol][row]++
+				}
+				if board[col][row] == 0 && board[col-1][row] == 1 {
+					rowCountCol++
+				}
+				if board[col][row] == 1 && board[col-1][row] == 0 {
+					rowcount[rowCountCol][row]++
+				}
+			}
 		}
 	}
 
@@ -76,26 +107,26 @@ func main() {
 
 	// Output the col counts as header rows
 	for row := 0; row < summary_dimemsion; row++ {
-		
+
 		// Indeed based on summary_dimemsion and the widthe
-		// of each of the columns 
+		// of each of the columns
 		output += "\n "
 		for i := 0; i < summary_dimemsion; i++ {
 			output += "    "
-		}	
-		
+		}
+
 		// Output actual colcount values into the head row
 		for col := 0; col < dimension; col++ {
 			output += fmt.Sprintf("  %d  ", colcount[col][row])
 		}
 	}
 	// Add a divider between header rows and start of board
-	output += "\n\n"	
+	output += "\n\n"
 	output += PrintSeparator(dimension, summary_dimemsion)
 
 	// Output main playing field and also the row counts at the front
 	for row := 0; row < dimension; row++ {
-		
+
 		// Output the row counts as the first elements of the row
 		for i := 0; i < summary_dimemsion; i++ {
 			output += fmt.Sprintf(" %d ", rowcount[i][row])
@@ -106,7 +137,7 @@ func main() {
 		for col := 0; col < dimension; col++ {
 			output += fmt.Sprintf("  %d |", board[col][row])
 		}
-				
+
 		// Add a divider between rows
 		output += "\n"
 		output += PrintSeparator(dimension, summary_dimemsion)
@@ -125,13 +156,11 @@ func PrintSeparator(dimension int, summary_dimemsion int) string {
 	var rtnString = "   "
 	for i := 0; i < summary_dimemsion; i++ {
 		rtnString += "   "
-	}		
-	
+	}
+
 	for col := 0; col < dimension; col++ {
 		rtnString += "+----"
 	}
-	rtnString += "+ \n"	
+	rtnString += "+ \n"
 	return rtnString
 }
-
-
