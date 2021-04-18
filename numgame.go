@@ -186,7 +186,6 @@ func DisplayBoard(gameStruct *game) {
 		//		-- 1: (Default) Hides the game values
 		//		-- 0: Dispalys values for debugging
 		// 				If it is a 0 output a blank otherwise print a 1
-		fmt.Println(gameStruct.modePtr)
 		for col := 0; col < gameStruct.dimension; col++ {
 			if *gameStruct.modePtr == 0 {
 				if gameStruct.board[col][row] == 0 {
