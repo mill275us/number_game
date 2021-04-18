@@ -45,6 +45,15 @@ func main() {
 	// Output the board
 	DisplayBoard(game)
 
+	// Temp code for playing
+	// Wait for user to press any key then reveal the answer
+	// Set modePtr to 0 to change to answer reveal
+	var dummyString string
+	fmt.Println("Press Any Key for Answer")
+	fmt.Scanln(&dummyString)
+	*game.modePtr = 0 // Set mode to 0 to change to answer reveal
+	DisplayBoard(game)
+
 }
 
 // InitGame takes an integer argument for the size of the playing field
