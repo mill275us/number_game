@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math"
 	"math/rand"
@@ -13,13 +14,27 @@ type game struct {
 	board             [][]int
 	colcount          [][]int
 	rowcount          [][]int
+	modePtr           *int
 }
 
 func main() {
 
+	// Harvest command line arguments
+	// size -- int representing the square size of the board Y by Y
+	//		-- default size is 5
+	// mode -- int representing the display mode
+	//		-- 1: (Default) Hides the game values
+	//		-- 0: Dispalys values for debugging
+	sizePtr := flag.Int("size", 5, "Size of game board as an Int")
+	modePtr := flag.Int("mode", 1, "Toggle board reveal for debugging as an Int")
+
+	// After all flags are declared you must call Parse
+	flag.Parse()
+
 	// Initialize game board and row and col counts in the game struct
 	// The int passed to game represent the board size
-	game := InitGame(6)
+	game := InitGame(*sizePtr)
+	game.modePtr = modePtr
 
 	// Populate the board with random 1's
 	FillBoard(game)
@@ -167,8 +182,21 @@ func DisplayBoard(gameStruct *game) {
 		output += " - |"
 
 		// Loop through all of the columns for this row
+		// modePtr -- int representing the display mode
+		//		-- 1: (Default) Hides the game values
+		//		-- 0: Dispalys values for debugging
+		// 				If it is a 0 output a blank otherwise print a 1
+		fmt.Println(gameStruct.modePtr)
 		for col := 0; col < gameStruct.dimension; col++ {
-			output += fmt.Sprintf("  %d |", gameStruct.board[col][row])
+			if *gameStruct.modePtr == 0 {
+				if gameStruct.board[col][row] == 0 {
+					output += "    |"
+				} else {
+					output += fmt.Sprintf("  %d |", gameStruct.board[col][row])
+				}
+			} else {
+				output += "    |"
+			}
 		}
 
 		// Add a divider between rows
