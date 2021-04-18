@@ -74,32 +74,64 @@ func main() {
 	/************** Output the board **************/
 	var output string
 
-	// Output the col counts
+	// Output the col counts as header rows
 	for row := 0; row < summary_dimemsion; row++ {
-		output += "\n        "
+		
+		// Indeed based on summary_dimemsion and the widthe
+		// of each of the columns 
+		output += "\n "
+		for i := 0; i < summary_dimemsion; i++ {
+			output += "    "
+		}	
+		
+		// Output actual colcount values into the head row
 		for col := 0; col < dimension; col++ {
-			output += fmt.Sprintf("  %d  ", colcount[col][0])
+			output += fmt.Sprintf("  %d  ", colcount[col][row])
 		}
 	}
-	output += "\n\n"
+	// Add a divider between header rows and start of board
+	output += "\n\n"	
+	output += PrintSeparator(dimension, summary_dimemsion)
 
 	// Output main playing field and also the row counts at the front
-	output += "       "
-	for col := 0; col < dimension; col++ {
-		output += "+----"
-	}
-	output += "+ \n"
 	for row := 0; row < dimension; row++ {
-		output += fmt.Sprintf(" %d --- |", rowcount[0][row])
+		
+		// Output the row counts as the first elements of the row
+		for i := 0; i < summary_dimemsion; i++ {
+			output += fmt.Sprintf(" %d ", rowcount[i][row])
+		}
+		output += " - |"
+
+		// Loop through all of the columns for this row
 		for col := 0; col < dimension; col++ {
 			output += fmt.Sprintf("  %d |", board[col][row])
 		}
-		output += "\n       "
-		for col := 0; col < dimension; col++ {
-			output += "+----"
-		}
-		output += "+ \n"
+				
+		// Add a divider between rows
+		output += "\n"
+		output += PrintSeparator(dimension, summary_dimemsion)
+
 	}
 	fmt.Println(output)
 
 }
+
+// PrintSeparator functions returns a string containing row separator
+// This string is indented based on the numbers of row count rows
+// as defined by summary_dimemsion
+// dimension === the Y by Y size of the game board
+// summary_dimemsion === 1/2 of dimension rounded up
+func PrintSeparator(dimension int, summary_dimemsion int) string {
+	var rtnString = "   "
+	for i := 0; i < summary_dimemsion; i++ {
+		rtnString += "   "
+	}		
+	
+	for col := 0; col < dimension; col++ {
+		rtnString += "+----"
+	}
+	rtnString += "+ \n"	
+	return rtnString
+}
+
+
