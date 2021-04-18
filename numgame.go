@@ -17,43 +17,58 @@ type game struct {
 
 func main() {
 
-	// Create the board as a square array of variable size 'dimension'
-	// Create a colcount array to hold the counts of 1's this should be
-	// 1/2 of the dimension rounded up in size
-	var dimension = 6
-	var summary_dimemsion = int(math.Round(float64(dimension) / 2))
-
-	board := make([][]int, dimension)
-
-	colcount := make([][]int, dimension)
-	for j := range colcount {
-		colcount[j] = make([]int, summary_dimemsion)
-	}
-
-	rowcount := make([][]int, summary_dimemsion)
-	for k := range rowcount {
-		rowcount[k] = make([]int, dimension)
-	}
+	// Initialize game board and row and col counts in the game struct
+	// The int passed to game represent the board size
+	game := InitGame(6)
 
 	// Populate the board with random 1's
-	FillBoard(dimension, board)
+	FillBoard(game)
 
-	// Calculate the 1's in rows and colums
-	UpdateBoard(dimension, board, colcount, rowcount)
+	/*
+		// Calculate the 1's in rows and colums
+		UpdateBoard(dimension, board, colcount, rowcount)
 
-	// Output the board
-	DisplayBoard(dimension, summary_dimemsion, board, colcount, rowcount)
+		// Output the board
+		DisplayBoard(dimension, summary_dimemsion, board, colcount, rowcount)
+	*/
 
+	fmt.Println(game)
 }
 
-func FillBoard(dimension int, board [][]int) {
+// InitGame takes an integer argument for the size of the playing field
+// returns a game struct
+// Create the board as a square array of variable size 'dimension'
+// Create a colcount and rowcount array to hold the counts of 1's this should be
+// 1/2 of the dimension rounded up in size
+func InitGame(dimension int) *game {
+	game := game{dimension: dimension}
+	game.summary_dimemsion = int(math.Round(float64(game.dimension) / 2))
+
+	game.board = make([][]int, game.dimension)
+
+	game.colcount = make([][]int, game.dimension)
+	for j := range game.colcount {
+		game.colcount[j] = make([]int, game.summary_dimemsion)
+	}
+
+	game.rowcount = make([][]int, game.summary_dimemsion)
+	for k := range game.rowcount {
+		game.rowcount[k] = make([]int, game.dimension)
+	}
+	return &game
+}
+
+// Populate the board with random 1's
+// Takes a pointer to a game struct whose data will be modified
+// This function further builds out the arrays for the board as it populates them
+func FillBoard(gameStruct *game) {
 	// Create and seed the generator.
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	for col := range board {
-		board[col] = make([]int, dimension)
-		for row := range board[col] {
-			board[col][row] = int(math.Round(r.Float64()))
+	for col := range gameStruct.board {
+		gameStruct.board[col] = make([]int, gameStruct.dimension)
+		for row := range gameStruct.board[col] {
+			gameStruct.board[col][row] = int(math.Round(r.Float64()))
 		}
 	}
 }
