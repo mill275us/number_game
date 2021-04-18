@@ -7,9 +7,15 @@ import (
 	"time"
 )
 
+type game struct {
+	dimension         int
+	summary_dimemsion int
+	board             [][]int
+	colcount          [][]int
+	rowcount          [][]int
+}
+
 func main() {
-	// Create and seed the generator.
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	// Create the board as a square array of variable size 'dimension'
 	// Create a colcount array to hold the counts of 1's this should be
@@ -30,13 +36,29 @@ func main() {
 	}
 
 	// Populate the board with random 1's
+	FillBoard(dimension, board)
+
+	// Calculate the 1's in rows and colums
+	UpdateBoard(dimension, board, colcount, rowcount)
+
+	// Output the board
+	DisplayBoard(dimension, summary_dimemsion, board, colcount, rowcount)
+
+}
+
+func FillBoard(dimension int, board [][]int) {
+	// Create and seed the generator.
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	for col := range board {
 		board[col] = make([]int, dimension)
 		for row := range board[col] {
 			board[col][row] = int(math.Round(r.Float64()))
 		}
 	}
+}
 
+func UpdateBoard(dimension int, board [][]int, colcount [][]int, rowcount [][]int) {
 	// Count number of 1's in each col
 	var check int
 	var lastWasTrue bool
@@ -101,8 +123,9 @@ func main() {
 			}
 		}
 	}
+}
 
-	/************** Output the board **************/
+func DisplayBoard(dimension int, summary_dimemsion int, board [][]int, colcount [][]int, rowcount [][]int) {
 	var output string
 
 	// Output the col counts as header rows
@@ -144,7 +167,6 @@ func main() {
 
 	}
 	fmt.Println(output)
-
 }
 
 // PrintSeparator functions returns a string containing row separator
