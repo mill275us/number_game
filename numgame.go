@@ -49,7 +49,7 @@ func main() {
 	// Wait for user to press any key then reveal the answer
 	// Set modePtr to 0 to change to answer reveal
 	var dummyString string
-	fmt.Println("Press Any Key for Answer")
+	fmt.Println("Press Enter for Answer")
 	fmt.Scanln(&dummyString)
 	*game.modePtr = 0 // Set mode to 0 to change to answer reveal
 	DisplayBoard(game)
@@ -165,11 +165,11 @@ func DisplayBoard(gameStruct *game) {
 	// Output the col counts as header rows
 	for row := 0; row < gameStruct.summary_dimemsion; row++ {
 
-		// Indeed based on summary_dimemsion and the widthe
+		// Indent based on summary_dimemsion and the widthe
 		// of each of the columns
-		output += "\n "
+		output += "\n    "
 		for i := 0; i < gameStruct.summary_dimemsion; i++ {
-			output += "    "
+			output += "   "
 		}
 
 		// Output actual colcount values into the head row
